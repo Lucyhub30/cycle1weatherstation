@@ -18,6 +18,8 @@ int altitude = 0;
 void setup() {
   bme.begin();
 
+  Serial.begin(9600);
+
   //set variables of particle dashboard
   Particle.variable("temp", temp);
   Particle.variable("humidity", humidity);
@@ -36,5 +38,17 @@ void loop() {
   altitude = (int)bme.readAltitude(1013.25); //sea level pressure, estimates altitude
 
   Particle.publish("testing");
+
+  Serial.print("Temperature: ");
+  Serial.println(temp);
+
+  Serial.print("Humidity: ");
+  Serial.println(humidity);
+
+  Serial.print("Pressure: ");
+  Serial.println(pressure);
+
+  Serial.print("Altitude: ");
+  Serial.println(altitude);
 
 }
