@@ -19,16 +19,59 @@ void getBarometerReadings() {
   altitude = (int)bme.readAltitude(1013.25);
 }
 
+
+// AIR QUALITY SENSOR CODE
+
+//Library for air quality sensor
+#include "Air_Quality_Sensor.h"
+
+//Pin for air quality sensor
+#define AQS_PIN A2
+AirQualitySensor aqSensor(AQS_PIN);
+
+//Initiates variable airQuality
+String airQuality = "Loading";
+
+//Function that collects readings from AQ sensor
+
+void getAirQualityReadings(){
+
+  //Gets sensor reading
+  int airQualityVal = aqSensor.slope();
+
+  //Assigns air quality
+  if (airQualityVal == AirQualitySensor:: FORCE_SIGNAL) {
+    airQuality = "Dangerous Level";
+  }
+  else if (airQualityVal == AirQualitySensor:: HIGH_POLLUTION) {
+    airQuality = "High Polution";
+  }
+  else if (airQualityVal == AirQualitySensor:: LOW_POLLUTION) {
+    airQuality = "Low Polution";
+  }
+  else if (airQualityVal == AirQualitySensor:: FRESH_AIR) {
+    airQuality = "Fresh Air";
+  }
+  else {
+    airQuality = "Reading Unsuccessful";
+  }
+
+}
+
+
+
+
 void setup() {
   bme.begin();
 
   Serial.begin(9600);
-
+ 
   //set variables of particle dashboard
   Particle.variable("temp", temp);
   Particle.variable("humidity", humidity);
   Particle.variable("pressure", pressure);
   Particle.variable("altitude", altitude);
+  Particle.variable("airQuality", airQuality);
 
   Particle.publish("Weather Station Online :)");
 }
@@ -37,8 +80,9 @@ void setup() {
 void loop() {
 
   getBarometerReadings();
+  getAirQualityReadings();
 
-  Particle.publish("testing");
+  Particle.publish("Weather Station Online :)");
 
   Serial.print("Temperature: ");
   Serial.println(temp);
