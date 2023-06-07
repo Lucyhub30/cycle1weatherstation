@@ -1,10 +1,3 @@
-/*
- * Project MyWeatherStation
- * Description: A level project cycle 1
- * Author: Lucy Smith
- * Date: 24/05/23
- */
-
 #include "Adafruit_BME280.h"
 
 Adafruit_BME280 bme;
@@ -14,6 +7,17 @@ int temp = 0;
 int humidity = 0;
 int pressure = 0;
 int altitude = 0;
+
+
+// BAROMETER SENSOR CODE
+
+void getBarometerReadings() {
+  //Collects readings from sensors
+  temp = (int)bme.readTemperature();
+  humidity = (int)bme.readHumidity();
+  pressure = (int)bme.readPressure();
+  altitude = (int)bme.readAltitude(1013.25);
+}
 
 void setup() {
   bme.begin();
@@ -32,10 +36,7 @@ void setup() {
 
 void loop() {
 
-  temp = (int)bme.readTemperature();
-  humidity = (int)bme.readHumidity();
-  pressure = (int)bme.readPressure();
-  altitude = (int)bme.readAltitude(1013.25); //sea level pressure, estimates altitude
+  getBarometerReadings();
 
   Particle.publish("testing");
 
