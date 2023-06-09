@@ -1,3 +1,4 @@
+#include "Particle.h"
 #include "Adafruit_BME280.h"
 
 Adafruit_BME280 bme;
@@ -58,8 +59,40 @@ void getAirQualityReadings(){
 
 }
 
+// DUST SENSOR
+
+#include <math.h>
+#define DUST_SENSOR_PIN A2
+#define SENSOR_READING_INTERVAL 30000
 
 
+unsigned long lastCheck;
+unsigned long lowpulseoccupancy = 0;
+unsigned long last_lpo = 0;
+unsigned long duration;
+
+double ratio = 0;
+double concentration = 0;
+
+
+
+void getDustSensorReadings(){
+  if (lowpulseoccupancy == 0){
+    lowpulseoccupancy = last_lpo;
+  }
+  else{
+    last_lpo = lowpulseoccupancy;
+  }
+
+  ratio = lowpulseoccupancy / (SENSOR_READING_INTERVAL * 10.0);
+  concentration = 1.1 * pow(ratio, 3) - 3.8 * pow(ratio, 2) + 520 * ratio + 0.62;
+
+
+
+  Serial.printlnf("LPO: %lu", lowpulseoccupancy);
+  Serial.printlnf("Ratio: %f%%", ratio);
+  Serial.printlnf("Concentration: %f pcs/L", concentration);
+}
 
 void setup() {
   bme.begin();
@@ -72,8 +105,13 @@ void setup() {
   Particle.variable("pressure", pressure);
   Particle.variable("altitude", altitude);
   Particle.variable("airQuality", airQuality);
+  Particle.variable("lpo", lowpulseoccupancy);
+  Particle.variable("ratio", ratio);
+  Particle.variable("conc", concentration);
 
   Particle.publish("Weather Station Online :)");
+  pinMode(DUST_SENSOR_PIN, INPUT);
+  lastCheck = millis();
 }
 
 
@@ -81,9 +119,29 @@ void loop() {
 
   getBarometerReadings();
   getAirQualityReadings();
+  
 
-  Particle.publish("Weather Station Online :)");
 
+  duration = pulseIn(DUST_SENSOR_PIN, LOW);
+  Serial.print("Duration: ");
+  Serial.print(duration);
+  lowpulseoccupancy = lowpulseoccupancy + duration;
+
+  if ((millis() - lastCheck) > SENSOR_READING_INTERVAL)
+  {
+    getDustSensorReadings();
+
+    lowpulseoccupancy = 0;
+    lastCheck = millis();
+  }
+
+  Particle.publish("Altitude: ", String(altitude));
+  Particle.publish("Temperature: ", String(temp));
+  Particle.publish("Humidity: ", String(humidity));
+  Particle.publish("Pressure: ", String(pressure));
+  Particle.publish("Air Quality: ", String(airQuality));
+  //Particle.publish("Dust concentration: ", String(concentration));
+  
   Serial.print("Temperature: ");
   Serial.println(temp);
 
@@ -95,5 +153,11 @@ void loop() {
 
   Serial.print("Altitude: ");
   Serial.println(altitude);
+
+  Serial.print("Air Quality: ");
+  Serial.println(airQuality);
+
+  Serial.print("Dust concentration: ");
+  Serial.println(concentration);
 
 }
