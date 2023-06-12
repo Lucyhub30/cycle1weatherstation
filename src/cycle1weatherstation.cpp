@@ -5,13 +5,17 @@
 #line 1 "/Users/lucy/Desktop/AlevelProject/cycle1weatherstation/src/cycle1weatherstation.ino"
 #include "Particle.h"
 #include "Adafruit_BME280.h"
+#include "JsonParserGeneratorRK.h"
+
 
 void getBarometerReadings();
 void getAirQualityReadings();
 void getDustSensorReadings();
+void getLightReadings();
+void getSoundReadings();
 void setup();
 void loop();
-#line 4 "/Users/lucy/Desktop/AlevelProject/cycle1weatherstation/src/cycle1weatherstation.ino"
+#line 6 "/Users/lucy/Desktop/AlevelProject/cycle1weatherstation/src/cycle1weatherstation.ino"
 Adafruit_BME280 bme;
 
 //initialising variables for BME280 sensor
@@ -38,7 +42,7 @@ void getBarometerReadings() {
 #include "Air_Quality_Sensor.h"
 
 //Pin for air quality sensor
-#define AQS_PIN A2
+#define AQS_PIN D2
 AirQualitySensor aqSensor(AQS_PIN);
 
 //Initiates variable airQuality
@@ -77,7 +81,7 @@ void getAirQualityReadings(){
 #define SENSOR_READING_INTERVAL 30000
 
 
-unsigned long lastInterval;
+unsigned long lastCheck;
 unsigned long lowpulseoccupancy = 0;
 unsigned long last_lpo = 0;
 unsigned long duration;
@@ -98,31 +102,48 @@ void getDustSensorReadings(){
   ratio = lowpulseoccupancy / (SENSOR_READING_INTERVAL * 10.0);
   concentration = 1.1 * pow(ratio, 3) - 3.8 * pow(ratio, 2) + 520 * ratio + 0.62;
 
-
-
-  Serial.printlnf("LPO: %lu", lowpulseoccupancy);
-  Serial.printlnf("Ratio: %f%%", ratio);
-  Serial.printlnf("Concentration: %f pcs/L", concentration);
 }
 
-void setup() {
-  bme.begin();
 
-  Serial.begin(9600);
- 
-  //set variables of particle dashboard
-  Particle.variable("temp", temp);
-  Particle.variable("humidity", humidity);
-  Particle.variable("pressure", pressure);
-  Particle.variable("altitude", altitude);
-  Particle.variable("airQuality", airQuality);
-  Particle.variable("lpo", lowpulseoccupancy);
-  Particle.variable("ratio", ratio);
-  Particle.variable("conc", concentration);
+// LIGHT SENSOR
+int lightPin = A0;
+int lightVal = 0;
+void getLightReadings() {
+
+  lightVal = analogRead(lightPin);
+
+}
+
+// SOUND SENSOR
+int soundPin = A4;
+int soundVal;
+
+void getSoundReadings() {
+  soundVal = analogRead(soundPin);
+}
+
+
+void setup() {
 
   Particle.publish("Weather Station Online :)");
+
+  //Setup barometer sensor
+  bme.begin();
+
+  //Setup serial monitor
+  Serial.begin(9600);
+  
+  //Setup dust sensor
   pinMode(DUST_SENSOR_PIN, INPUT);
-  lastInterval = millis();
+  lastCheck = millis();
+
+  //Setup light sensor
+  pinMode(lightPin, INPUT);
+
+  //Setup sound sensor
+  pinMode(soundPin, INPUT);
+
+  
 }
 
 
@@ -130,45 +151,45 @@ void loop() {
 
   getBarometerReadings();
   getAirQualityReadings();
+  getLightReadings();
+  getSoundReadings();
   
 
 
   duration = pulseIn(DUST_SENSOR_PIN, LOW);
-  Serial.print("Duration: ");
-  Serial.print(duration);
+  
   lowpulseoccupancy = lowpulseoccupancy + duration;
 
-  if ((millis() - lastInterval) > SENSOR_READING_INTERVAL)
+  if ((millis() - lastCheck) > SENSOR_READING_INTERVAL)
   {
     getDustSensorReadings();
 
     lowpulseoccupancy = 0;
-    lastInterval = millis();
+    lastCheck = millis();
   }
+  Serial.print("Sound: ");
+  Serial.println(soundVal);
+  Serial.print("Light: ");
+  Serial.println(lightVal);
 
-  Particle.publish("Altitude: ", String(altitude));
-  Particle.publish("Temperature: ", String(temp));
-  Particle.publish("Humidity: ", String(humidity));
-  Particle.publish("Pressure: ", String(pressure));
-  Particle.publish("Air Quality: ", String(airQuality));
-  //Particle.publish("Dust concentration: ", String(concentration));
-  
-  Serial.print("Temperature: ");
-  Serial.println(temp);
+  //Build JSON object to publish to cloud
+  JsonWriterStatic<256> jw;
 
-  Serial.print("Humidity: ");
-  Serial.println(humidity);
+  {
+    JsonWriterAutoObject obj(&jw);
 
-  Serial.print("Pressure: ");
-  Serial.println(pressure);
+    // Add various types of data
+    jw.insertKeyValue("temp", temp);
+    jw.insertKeyValue("humidity", humidity);
+    jw.insertKeyValue("pressure", pressure);
+    jw.insertKeyValue("altitude", altitude);
+    jw.insertKeyValue("airQual", airQuality);
+    jw.insertKeyValue("lpo_val", lowpulseoccupancy);
+    jw.insertKeyValue("dust_ratio", ratio);
+    jw.insertKeyValue("dust_conc", concentration);
+    jw.insertKeyValue("light", lightVal);
+    jw.insertKeyValue("sound", soundVal);
 
-  Serial.print("Altitude: ");
-  Serial.println(altitude);
-
-  Serial.print("Air Quality: ");
-  Serial.println(airQuality);
-
-  Serial.print("Dust concentration: ");
-  Serial.println(concentration);
-
+  }
+  Particle.publish("weatherStationData", jw.getBuffer(), PRIVATE);
 }
