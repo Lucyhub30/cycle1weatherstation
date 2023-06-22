@@ -163,14 +163,13 @@ void loop() {
   if ((millis() - lastCheck) > SENSOR_READING_INTERVAL)
   {
     getDustSensorReadings();
-
+  
     lowpulseoccupancy = 0;
     lastCheck = millis();
   }
-  Serial.print("Sound: ");
-  Serial.println(soundVal);
-  Serial.print("Light: ");
-  Serial.println(lightVal);
+
+  Serial.print("Temperature: ");
+  Serial.println(temp);
 
   //Build JSON object to publish to cloud
   JsonWriterStatic<256> jw;
