@@ -110,6 +110,46 @@ void getSoundReadings() {
 }
 
 
+// MQTT Broker connection
+#include "MQTT.h"
+
+//const long channelId = 1883; 
+String clientId = "mrargon";
+//String username = "lucyargon22";
+//String password = "myproject22!";
+char server[ ] = "public.mqtthq.com";
+
+
+//Setup MQTT broker
+MQTT client(server, 1883, callback); 
+
+// Define a callback function to initialize the MQTT client.
+void callback(char* topic, byte* payload, unsigned int length) {
+}
+
+void mqtt_publish(char *pubdata){
+  client.publish("weather/station/data",pubdata);
+}
+
+void reconnect(){
+  Particle.publish("Attempting MQTT connection");
+        
+  // Connect to the HiveMQ MQTT broker.
+//  Serial.print("Client if statement output: ");
+  int connected = client.connect(clientId);
+  if (!connected)  {
+    // Track the connection with particle console.
+    Particle.publish("Connected");
+  } 
+  else {
+    String connectionCode = "Connection return code: " + (String)connected;
+    Particle.publish(connectionCode);
+    Particle.publish("Failed to connect. Trying to reconnect in 2 seconds");
+    delay(2000);
+  } 
+}
+
+
 void setup() {
 
   Particle.publish("Weather Station Online :)");
@@ -130,7 +170,8 @@ void setup() {
   //Setup sound sensor
   pinMode(soundPin, INPUT);
 
-  
+  client.connect(clientId);
+  Particle.publish((String)client.isConnected());
 }
 
 
@@ -140,8 +181,6 @@ void loop() {
   getAirQualityReadings();
   getLightReadings();
   getSoundReadings();
-  
-
 
   duration = pulseIn(DUST_SENSOR_PIN, LOW);
   
@@ -175,5 +214,21 @@ void loop() {
     jw.insertKeyValue("sound", soundVal);
 
   }
+  // If MQTT client is not connected then reconnect.
+  if (!client.isConnected()) {
+    reconnect();
+  } 
+  
+  
+  mqtt_publish(jw.getBuffer());
   Particle.publish("weatherStationData", jw.getBuffer(), PRIVATE);
+
+
+    
+  // Call the loop continuously to establish connection to the server.
+  
+  if (client.isConnected()) {
+    client.loop();
+  }
+  
 }
