@@ -144,7 +144,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void mqtt_publish(char *pubdata){
-  client.publish("lucytopic",pubdata);
+  client.publish("weather/station/data",pubdata);
 }
 
 void reconnect(){
@@ -211,13 +211,17 @@ void loop() {
   }
 
   
+
+
   //Build JSON object to publish to cloud
+
   JsonWriterStatic<256> jw;
 
   {
     JsonWriterAutoObject obj(&jw);
 
     // Add various types of data
+    jw.insertKeyValue("timestamp", (int) Time.now());
     jw.insertKeyValue("temp", temp);
     jw.insertKeyValue("humidity", humidity);
     jw.insertKeyValue("pressure", pressure);
@@ -246,5 +250,8 @@ void loop() {
   if (client.isConnected()) {
     client.loop();
   }
+  //Only take readings at certain intervals (in minutes)
+  int delay_interval = 30;
+  delay(delay_interval*60000);
   
 }
