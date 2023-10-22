@@ -1,5 +1,7 @@
 #include "Particle.h"
+// Temperature, humidity, air pressure and altitude sensor library
 #include "Adafruit_BME280.h"
+// Library that converts data into JASON Parser format
 #include "JsonParserGeneratorRK.h"
 
 
@@ -14,12 +16,21 @@ int altitude = 0;
 
 // BAROMETER SENSOR CODE
 
+
+//Function to collect all barometer sensor readings
 void getBarometerReadings() {
   //Collects readings from sensors
+  //Assigns temp variable to temperature, collected by sensor
   temp = (int)bme.readTemperature();
+  
+  //Assigns humidity variable to temperature, collected by sensor
   humidity = (int)bme.readHumidity();
+  
+  //Assigns pressure variable to temperature, collected by sensor
   pressure = (int)bme.readPressure();
-  altitude = (int)bme.readAltitude(1013.25);
+  
+  //Assigns altitude variable to temperature, collected by sensor
+  altitude = (int)bme.readAltitude(1013.25); //sea level pressure, estimates altitude
 }
 
 
@@ -44,18 +55,23 @@ void getAirQualityReadings(){
 
   //Assigns air quality
   if (airQualityVal == AirQualitySensor:: FORCE_SIGNAL) {
+    //Assigns air quality to dangerous level
     airQuality = "Dangerous Level";
   }
   else if (airQualityVal == AirQualitySensor:: HIGH_POLLUTION) {
-    airQuality = "High Polution";
+    //Assigns air quality to high pollution
+    airQuality = "High Pollution";
   }
   else if (airQualityVal == AirQualitySensor:: LOW_POLLUTION) {
-    airQuality = "Low Polution";
+    //Assigns air quality to low pollution 
+    airQuality = "Low Pollution";
   }
+  //Assigns air quality to fresh air
   else if (airQualityVal == AirQualitySensor:: FRESH_AIR) {
     airQuality = "Fresh Air";
   }
   else {
+    //A validation check for when the reading for air quality isn't successful
     airQuality = "Reading Unsuccessful";
   }
 
@@ -68,25 +84,32 @@ void getAirQualityReadings(){
 #define SENSOR_READING_INTERVAL 30000
 
 
+//Variables used in program
+//The miliseconds since the last readings check
 unsigned long lastCheck;
-unsigned long lowpulseoccupancy = 0;
+//Stores the value for lowpulseoccupancy
+unsigned long lpo_val = 0;
+//Stores the value for the last lowpulseoccupancy
 unsigned long last_lpo = 0;
 unsigned long duration;
 
 double ratio = 0;
+//Concentration of dust in atmosphere
 double concentration = 0;
 
 
-
+//Function of collect sensor readings
 void getDustSensorReadings(){
-  if (lowpulseoccupancy == 0){
-    lowpulseoccupancy = last_lpo;
+  //Prevents the value on the dust sensor from being 0
+  if (lpo_val == 0){
+    lpo_val = last_lpo;
   }
   else{
-    last_lpo = lowpulseoccupancy;
+    last_lpo = lpo_val;
   }
 
-  ratio = lowpulseoccupancy / (SENSOR_READING_INTERVAL * 10.0);
+  //Pre-set formulas to calculates the concentration of dust
+  ratio = lpo_val / (SENSOR_READING_INTERVAL * 10.0);
   concentration = 1.1 * pow(ratio, 3) - 3.8 * pow(ratio, 2) + 520 * ratio + 0.62;
 
 }
@@ -184,13 +207,13 @@ void loop() {
 
   duration = pulseIn(DUST_SENSOR_PIN, LOW);
   
-  lowpulseoccupancy = lowpulseoccupancy + duration;
+  lpo_val = lpo_val + duration;
 
   if ((millis() - lastCheck) > SENSOR_READING_INTERVAL)
   {
     getDustSensorReadings();
   
-    lowpulseoccupancy = 0;
+    lpo_val = 0;
     lastCheck = millis();
   }
 
@@ -211,7 +234,7 @@ void loop() {
     jw.insertKeyValue("pressure", pressure);
     jw.insertKeyValue("altitude", altitude);
     jw.insertKeyValue("airQual", airQuality);
-    jw.insertKeyValue("lpo_val", lowpulseoccupancy);
+    jw.insertKeyValue("lpo_val", lpo_val);
     jw.insertKeyValue("dust_ratio", ratio);
     jw.insertKeyValue("dust_conc", concentration);
     jw.insertKeyValue("light", lightVal);
@@ -225,7 +248,7 @@ void loop() {
   
   
   mqtt_publish(jw.getBuffer());
-  Particle.publish("weatherStationData", jw.getBuffer(), PRIVATE);
+  Particle.publish("weatherStationData", jw.getBuffer(), PUBLIC);
 
 
     
@@ -235,7 +258,7 @@ void loop() {
     client.loop();
   }
   //Only take readings at certain intervals (in minutes)
-  int delay_interval = 30;
+  int delay_interval = 20;
   delay(delay_interval*60000);
   
 }

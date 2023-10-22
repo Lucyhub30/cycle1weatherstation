@@ -313,7 +313,7 @@ void getAirQualityReadings(){
    b4182:	681b      	ldr	r3, [r3, #0]
    b4184:	4283      	cmp	r3, r0
    b4186:	d101      	bne.n	b418c <_Z21getAirQualityReadingsv+0x28>
-    airQuality = "High Polution";
+    airQuality = "High Pollution";
    b4188:	490c      	ldr	r1, [pc, #48]	; (b41bc <_Z21getAirQualityReadingsv+0x58>)
    b418a:	e7f4      	b.n	b4176 <_Z21getAirQualityReadingsv+0x12>
   else if (airQualityVal == AirQualitySensor:: LOW_POLLUTION) {
@@ -321,7 +321,7 @@ void getAirQualityReadings(){
    b418e:	681b      	ldr	r3, [r3, #0]
    b4190:	4283      	cmp	r3, r0
    b4192:	d101      	bne.n	b4198 <_Z21getAirQualityReadingsv+0x34>
-    airQuality = "Low Polution";
+    airQuality = "Low Pollution";
    b4194:	490b      	ldr	r1, [pc, #44]	; (b41c4 <_Z21getAirQualityReadingsv+0x60>)
    b4196:	e7ee      	b.n	b4176 <_Z21getAirQualityReadingsv+0x12>
   else if (airQualityVal == AirQualitySensor:: FRESH_AIR) {
@@ -342,10 +342,10 @@ void getAirQualityReadings(){
    b41b8:	000ba2c0 	.word	0x000ba2c0
    b41bc:	000ba0f0 	.word	0x000ba0f0
    b41c0:	000ba2bc 	.word	0x000ba2bc
-   b41c4:	000ba0fe 	.word	0x000ba0fe
+   b41c4:	000ba0ff 	.word	0x000ba0ff
    b41c8:	000ba2c4 	.word	0x000ba2c4
-   b41cc:	000ba10b 	.word	0x000ba10b
-   b41d0:	000ba115 	.word	0x000ba115
+   b41cc:	000ba10d 	.word	0x000ba10d
+   b41d0:	000ba117 	.word	0x000ba117
    b41d4:	00000000 	.word	0x00000000
 
 000b41d8 <_Z21getDustSensorReadingsv>:
@@ -474,7 +474,7 @@ void mqtt_publish(char *pubdata){
    b42e8:	4802      	ldr	r0, [pc, #8]	; (b42f4 <_Z12mqtt_publishPc+0x10>)
    b42ea:	f001 bb32 	b.w	b5952 <_ZN4MQTT7publishEPKcS1_>
    b42ee:	bf00      	nop
-   b42f0:	000ba12a 	.word	0x000ba12a
+   b42f0:	000ba12c 	.word	0x000ba12c
    b42f4:	2003e610 	.word	0x2003e610
 
 000b42f8 <_ZNSt14__shared_countILN9__gnu_cxx12_Lock_policyE0EED1Ev>:
@@ -611,12 +611,12 @@ class StringSumHelper : public String
    b43aa:	f002 fd6d 	bl	b6e88 <_ZN6StringD1Ev>
 }
    b43ae:	e7cf      	b.n	b4350 <_Z9reconnectv+0x2c>
-   b43b0:	000ba13f 	.word	0x000ba13f
+   b43b0:	000ba141 	.word	0x000ba141
    b43b4:	2003e670 	.word	0x2003e670
    b43b8:	2003e610 	.word	0x2003e610
-   b43bc:	000ba15a 	.word	0x000ba15a
-   b43c0:	000ba164 	.word	0x000ba164
-   b43c4:	000ba17d 	.word	0x000ba17d
+   b43bc:	000ba15c 	.word	0x000ba15c
+   b43c0:	000ba166 	.word	0x000ba166
+   b43c4:	000ba17f 	.word	0x000ba17f
 
 000b43c8 <setup>:
 
@@ -692,7 +692,7 @@ inline system_tick_t millis(void) { return HAL_Timer_Get_Milli_Seconds(); }
 }
    b4440:	b006      	add	sp, #24
    b4442:	bd10      	pop	{r4, pc}
-   b4444:	000ba1b1 	.word	0x000ba1b1
+   b4444:	000ba1b3 	.word	0x000ba1b3
    b4448:	2003e610 	.word	0x2003e610
    b444c:	2003e5cc 	.word	0x2003e5cc
    b4450:	2003e690 	.word	0x2003e690
@@ -974,7 +974,7 @@ inline particle::Flags<TagT, ValueT>::Flags(ValueT val) :
    b4628:	f001 f9ef 	bl	b5a0a <_ZN4MQTT4loopEv>
   }
   //Only take readings at certain intervals (in minutes)
-  int delay_interval = 30;
+  int delay_interval = 20;
   delay(delay_interval*60000);
    b462c:	481f      	ldr	r0, [pc, #124]	; (b46ac <loop+0x1e8>)
    b462e:	f001 fe09 	bl	b6244 <delay>
@@ -989,31 +989,31 @@ inline particle::Flags<TagT, ValueT>::Flags(ValueT val) :
    b4640:	2003e688 	.word	0x2003e688
    b4644:	2003e690 	.word	0x2003e690
    b4648:	000ba258 	.word	0x000ba258
-   b464c:	000ba1cb 	.word	0x000ba1cb
+   b464c:	000ba1cd 	.word	0x000ba1cd
    b4650:	2003e6b4 	.word	0x2003e6b4
-   b4654:	000ba1d5 	.word	0x000ba1d5
+   b4654:	000ba1d7 	.word	0x000ba1d7
    b4658:	2003e68c 	.word	0x2003e68c
-   b465c:	000ba1da 	.word	0x000ba1da
+   b465c:	000ba1dc 	.word	0x000ba1dc
    b4660:	2003e6a0 	.word	0x2003e6a0
-   b4664:	000ba1e3 	.word	0x000ba1e3
+   b4664:	000ba1e5 	.word	0x000ba1e5
    b4668:	2003e5ac 	.word	0x2003e5ac
-   b466c:	000ba1ec 	.word	0x000ba1ec
+   b466c:	000ba1ee 	.word	0x000ba1ee
    b4670:	2003e59c 	.word	0x2003e59c
-   b4674:	000ba1f5 	.word	0x000ba1f5
-   b4678:	000ba1fd 	.word	0x000ba1fd
-   b467c:	000ba205 	.word	0x000ba205
+   b4674:	000ba1f7 	.word	0x000ba1f7
+   b4678:	000ba1ff 	.word	0x000ba1ff
+   b467c:	000ba207 	.word	0x000ba207
    b4680:	2003e6a8 	.word	0x2003e6a8
-   b4684:	000ba209 	.word	0x000ba209
+   b4684:	000ba20b 	.word	0x000ba20b
    b4688:	2003e680 	.word	0x2003e680
-   b468c:	000ba214 	.word	0x000ba214
+   b468c:	000ba216 	.word	0x000ba216
    b4690:	2003e698 	.word	0x2003e698
-   b4694:	000ba21e 	.word	0x000ba21e
+   b4694:	000ba220 	.word	0x000ba220
    b4698:	2003e6b0 	.word	0x2003e6b0
-   b469c:	000ba224 	.word	0x000ba224
+   b469c:	000ba226 	.word	0x000ba226
    b46a0:	2003e610 	.word	0x2003e610
    b46a4:	2003e599 	.word	0x2003e599
-   b46a8:	000ba22a 	.word	0x000ba22a
-   b46ac:	001b7740 	.word	0x001b7740
+   b46a8:	000ba22c 	.word	0x000ba22c
+   b46ac:	00124f80 	.word	0x00124f80
 
 000b46b0 <_GLOBAL__sub_I_bme>:
         val_(val) {
@@ -1053,9 +1053,9 @@ MQTT client(server, 1883, callback);
    b46f4:	2003e599 	.word	0x2003e599
    b46f8:	2003e5cc 	.word	0x2003e5cc
    b46fc:	2003e5b0 	.word	0x2003e5b0
-   b4700:	000ba23d 	.word	0x000ba23d
+   b4700:	000ba23f 	.word	0x000ba23f
    b4704:	2003e59c 	.word	0x2003e59c
-   b4708:	000ba245 	.word	0x000ba245
+   b4708:	000ba247 	.word	0x000ba247
    b470c:	2003e670 	.word	0x2003e670
    b4710:	000b40b7 	.word	0x000b40b7
    b4714:	2003e510 	.word	0x2003e510
@@ -1156,7 +1156,7 @@ MQTT client(server, 1883, callback);
    b4780:	4a05      	ldr	r2, [pc, #20]	; (b4798 <_ZNK8particle11SPISettings7printToER5Print+0x50>)
    b4782:	e7ef      	b.n	b4764 <_ZNK8particle11SPISettings7printToER5Print+0x1c>
    b4784:	000ba271 	.word	0x000ba271
-   b4788:	000ba17c 	.word	0x000ba17c
+   b4788:	000ba17e 	.word	0x000ba17e
    b478c:	000ba26d 	.word	0x000ba26d
    b4790:	000ba269 	.word	0x000ba269
    b4794:	000ba287 	.word	0x000ba287
@@ -3212,7 +3212,7 @@ MQTT::MQTT(const char* domain, uint16_t port, void (*callback)(char*,uint8_t*,un
    b54e4:	4620      	mov	r0, r4
    b54e6:	b004      	add	sp, #16
    b54e8:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
-   b54ec:	000ba17c 	.word	0x000ba17c
+   b54ec:	000ba17e 	.word	0x000ba17e
 
 000b54f0 <_ZN4MQTT8readByteEv>:
         _client.stop();
@@ -13772,29 +13772,29 @@ USARTSerial& __fetch_global_Serial1()
 000ba0cc <dynalib_user>:
    ba0cc:	4021 000b 405d 000b 4085 000b 4089 000b     !@..]@...@...@..
    ba0dc:	0000 0000 6144 676e 7265 756f 2073 654c     ....Dangerous Le
-   ba0ec:	6576 006c 6948 6867 5020 6c6f 7475 6f69     vel.High Polutio
-   ba0fc:	006e 6f4c 2077 6f50 756c 6974 6e6f 4600     n.Low Polution.F
-   ba10c:	6572 6873 4120 7269 5200 6165 6964 676e     resh Air.Reading
-   ba11c:	5520 736e 6375 6563 7373 7566 006c 6577      Unsuccessful.we
-   ba12c:	7461 6568 2f72 7473 7461 6f69 2f6e 6164     ather/station/da
-   ba13c:	6174 4100 7474 6d65 7470 6e69 2067 514d     ta.Attempting MQ
-   ba14c:	5454 6320 6e6f 656e 7463 6f69 006e 6f43     TT connection.Co
-   ba15c:	6e6e 6365 6574 0064 6f43 6e6e 6365 6974     nnected.Connecti
-   ba16c:	6e6f 7220 7465 7275 206e 6f63 6564 203a     on return code: 
-   ba17c:	4600 6961 656c 2064 6f74 6320 6e6f 656e     .Failed to conne
-   ba18c:	7463 202e 7254 6979 676e 7420 206f 6572     ct. Trying to re
-   ba19c:	6f63 6e6e 6365 2074 6e69 3220 7320 6365     connect in 2 sec
-   ba1ac:	6e6f 7364 5700 6165 6874 7265 5320 6174     onds.Weather Sta
-   ba1bc:	6974 6e6f 4f20 6c6e 6e69 2065 293a 7400     tion Online :).t
-   ba1cc:	6d69 7365 6174 706d 7400 6d65 0070 7568     imestamp.temp.hu
-   ba1dc:	696d 6964 7974 7000 6572 7373 7275 0065     midity.pressure.
-   ba1ec:	6c61 6974 7574 6564 6100 7269 7551 6c61     altitude.airQual
-   ba1fc:	6c00 6f70 765f 6c61 2500 756c 6400 7375     .lpo_val.%lu.dus
-   ba20c:	5f74 6172 6974 006f 7564 7473 635f 6e6f     t_ratio.dust_con
-   ba21c:	0063 696c 6867 0074 6f73 6e75 0064 6577     c.light.sound.we
-   ba22c:	7461 6568 5372 6174 6974 6e6f 6144 6174     atherStationData
-   ba23c:	4c00 616f 6964 676e 6d00 6172 6772 6e6f     .Loading.mrargon
-   ba24c:	0000 0000                                   ....
+   ba0ec:	6576 006c 6948 6867 5020 6c6f 756c 6974     vel.High Polluti
+   ba0fc:	6e6f 4c00 776f 5020 6c6f 756c 6974 6e6f     on.Low Pollution
+   ba10c:	4600 6572 6873 4120 7269 5200 6165 6964     .Fresh Air.Readi
+   ba11c:	676e 5520 736e 6375 6563 7373 7566 006c     ng Unsuccessful.
+   ba12c:	6577 7461 6568 2f72 7473 7461 6f69 2f6e     weather/station/
+   ba13c:	6164 6174 4100 7474 6d65 7470 6e69 2067     data.Attempting 
+   ba14c:	514d 5454 6320 6e6f 656e 7463 6f69 006e     MQTT connection.
+   ba15c:	6f43 6e6e 6365 6574 0064 6f43 6e6e 6365     Connected.Connec
+   ba16c:	6974 6e6f 7220 7465 7275 206e 6f63 6564     tion return code
+   ba17c:	203a 4600 6961 656c 2064 6f74 6320 6e6f     : .Failed to con
+   ba18c:	656e 7463 202e 7254 6979 676e 7420 206f     nect. Trying to 
+   ba19c:	6572 6f63 6e6e 6365 2074 6e69 3220 7320     reconnect in 2 s
+   ba1ac:	6365 6e6f 7364 5700 6165 6874 7265 5320     econds.Weather S
+   ba1bc:	6174 6974 6e6f 4f20 6c6e 6e69 2065 293a     tation Online :)
+   ba1cc:	7400 6d69 7365 6174 706d 7400 6d65 0070     .timestamp.temp.
+   ba1dc:	7568 696d 6964 7974 7000 6572 7373 7275     humidity.pressur
+   ba1ec:	0065 6c61 6974 7574 6564 6100 7269 7551     e.altitude.airQu
+   ba1fc:	6c61 6c00 6f70 765f 6c61 2500 756c 6400     al.lpo_val.%lu.d
+   ba20c:	7375 5f74 6172 6974 006f 7564 7473 635f     ust_ratio.dust_c
+   ba21c:	6e6f 0063 696c 6867 0074 6f73 6e75 0064     onc.light.sound.
+   ba22c:	6577 7461 6568 5372 6174 6974 6e6f 6144     weatherStationDa
+   ba23c:	6174 4c00 616f 6964 676e 6d00 6172 6772     ta.Loading.mrarg
+   ba24c:	6e6f 0000                                   on..
 
 000ba250 <_ZTV16JsonWriterStaticILj256EE>:
 	...

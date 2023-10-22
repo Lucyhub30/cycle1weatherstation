@@ -63,10 +63,10 @@ void getAirQualityReadings(){
     airQuality = "Dangerous Level";
   }
   else if (airQualityVal == AirQualitySensor:: HIGH_POLLUTION) {
-    airQuality = "High Polution";
+    airQuality = "High Pollution";
   }
   else if (airQualityVal == AirQualitySensor:: LOW_POLLUTION) {
-    airQuality = "Low Polution";
+    airQuality = "Low Pollution";
   }
   else if (airQualityVal == AirQualitySensor:: FRESH_AIR) {
     airQuality = "Fresh Air";
@@ -241,7 +241,7 @@ void loop() {
   
   
   mqtt_publish(jw.getBuffer());
-  Particle.publish("weatherStationData", jw.getBuffer(), PRIVATE);
+  Particle.publish("weatherStationData", jw.getBuffer(), PUBLIC);
 
 
     
@@ -251,7 +251,7 @@ void loop() {
     client.loop();
   }
   //Only take readings at certain intervals (in minutes)
-  int delay_interval = 30;
+  int delay_interval = 20;
   delay(delay_interval*60000);
   
 }
